@@ -1,0 +1,30 @@
+---
+title: "Earthquakes off Fiji"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## 9 Oct 2018
+
+```{r createMap, include = FALSE}
+library(leaflet)
+library(dplyr)
+df <- as.data.frame(quakes)
+rename(df, lng = long)
+pal <- colorNumeric(
+  palette = "Reds",
+  domain = df$depth)
+map <- df %>% leaflet() %>%
+                addTiles() %>%
+                addCircleMarkers(clusterOptions = markerClusterOptions(), 
+                                 radius = sqrt(df$mag) * 30, color = ~pal(df$depth), 
+                                 popup = paste("Magnitude", df$mag, "at depth", df$depth, "km"))
+```
+
+```{r plotMap}
+map
+```
+
